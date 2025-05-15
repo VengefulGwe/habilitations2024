@@ -254,5 +254,21 @@ namespace habilitations2024.view
             txtPwd2.Text = "";
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<Profil> lesProfils = controller.GetLesProfils(); 
+            comboBox1.Items.Add(new ComboBoxItem { Text = "", Value = null }); 
+            foreach (Profil profil in lesProfils)
+            {
+                comboBox1.Items.Add(new ComboBoxItem { Text = profil.Nom, Value = profil.Idprofil });
+            }
+            comboBox1.SelectedIndex = 0;
+            comboBox1.SelectedIndexChanged += (sender, e) =>
+            {
+                int? idprofil = (comboBox1.SelectedItem as ComboBoxItem)?.Value as int?;
+                List<Developpeur> lesDeveloppeurs = GetLesDeveloppeurs(idprofil);
+            };
+
+        }
     }
 }

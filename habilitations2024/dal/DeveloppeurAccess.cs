@@ -63,16 +63,14 @@ namespace habilitations2024.dal
         /// Récupère et retourne les développeurs
         /// </summary>
         /// <returns>liste des développeurs</returns>
-        public List<Developpeur> GetLesDeveloppeurs(int? idProfil = null)
+        public List<Developpeur> GetLesDeveloppeurs(int? idprofil = null)
         {
             List<Developpeur> lesDeveloppeurs = new List<Developpeur>();
             if (access.Manager != null)
             {
                 string req = "select d.iddeveloppeur as iddeveloppeur, d.nom as nom, d.prenom as prenom, d.tel as tel, d.mail as mail, p.idprofil as idprofil, p.nom as profil ";
                 req += "from developpeur d join profil p on (d.idprofil = p.idprofil) ";
-
-                // Ajouter une condition WHERE si un idProfil est fourni
-                if (idProfil.HasValue)
+                if (idprofil.HasValue)
                 {
                     req += "where p.idprofil = @idProfil ";
                 }
@@ -82,10 +80,9 @@ namespace habilitations2024.dal
                 try
                 {
                     List<Object[]> records;
-                    if (idProfil.HasValue)
+                    if (idprofil.HasValue)
                     {
-                        // Utiliser une requête paramétrée pour éviter les injections SQL
-                        records = access.Manager.ReqSelect(req, new Dictionary<string, object> { { "@Profil", idProfil.Value } });
+                        records = access.Manager.ReqSelect(req, new Dictionary<string, object> { { "id@Profil", idprofil.Value } });
                     }
                     else
                     {
