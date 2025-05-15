@@ -63,17 +63,35 @@ namespace habilitations2024.dal
         /// Récupère et retourne les développeurs
         /// </summary>
         /// <returns>liste des développeurs</returns>
-        public List<Developpeur> GetLesDeveloppeurs()
+        public List<Developpeur> GetLesDeveloppeurs(int? idProfil = null)
         {
             List<Developpeur> lesDeveloppeurs = new List<Developpeur>();
             if (access.Manager != null)
             {
                 string req = "select d.iddeveloppeur as iddeveloppeur, d.nom as nom, d.prenom as prenom, d.tel as tel, d.mail as mail, p.idprofil as idprofil, p.nom as profil ";
                 req += "from developpeur d join profil p on (d.idprofil = p.idprofil) ";
+
+                // Ajouter une condition WHERE si un idProfil est fourni
+                if (idProfil.HasValue)
+                {
+                    req += "where p.idprofil = @idProfil ";
+                }
+
                 req += "order by nom, prenom;";
+
                 try
                 {
-                    List<Object[]> records = access.Manager.ReqSelect(req);
+                    List<Object[]> records;
+                    if (idProfil.HasValue)
+                    {
+                        // Utiliser une requête paramétrée pour éviter les injections SQL
+                        records = access.Manager.ReqSelect(req, new Dictionary<string, object> { { "@Profil", idProfil.Value } });
+                    }
+                    else
+                    {
+                        records = access.Manager.ReqSelect(req);
+                    }
+
                     if (records != null)
                     {
                         foreach (Object[] record in records)
