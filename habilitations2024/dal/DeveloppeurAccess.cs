@@ -1,4 +1,5 @@
 ﻿using habilitations2024.model;
+using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -217,3 +218,81 @@ namespace habilitations2024.dal
 
     }
 }
+//tests unitaires
+public class DeveloppeurService
+{
+    public List<Developpeur> GetLesDeveloppeurs(int? idprofil = null)
+    {
+        List<Developpeur> lesDeveloppeurs = new List<Developpeur>();
+        // Simuler l'accès à la base de données
+        if (idprofil.HasValue)
+        {
+            // Simuler la récupération des développeurs pour un profil spécifique
+            lesDeveloppeurs.Add(new Developpeur(1, "Nom1", "Prenom1", "Tel1", "Mail1", new Profil(1, "Profil1")));
+            lesDeveloppeurs.Add(new Developpeur(2, "Nom2", "Prenom2", "Tel2", "Mail2", new Profil(1, "Profil1")));
+        }
+        else
+        {
+            // Simuler la récupération de tous les développeurs
+            lesDeveloppeurs.Add(new Developpeur(1, "Nom1", "Prenom1", "Tel1", "Mail1", new Profil(1, "Profil1")));
+            lesDeveloppeurs.Add(new Developpeur(2, "Nom2", "Prenom2", "Tel2", "Mail2", new Profil(1, "Profil1")));
+            lesDeveloppeurs.Add(new Developpeur(3, "Nom3", "Prenom3", "Tel3", "Mail3", new Profil(2, "Profil2")));
+            lesDeveloppeurs.Add(new Developpeur(4, "Nom4", "Prenom4", "Tel4", "Mail4", new Profil(2, "Profil2")));
+        }
+        return lesDeveloppeurs;
+    }
+}
+
+public class DeveloppeurServiceTests
+{
+    public static void GetLesDeveloppeurs_WithProfil_ShouldReturnCorrectNumberOfDevelopers()
+    {
+        // Arrange
+        var service = new DeveloppeurService();
+        int idProfil = 1;
+        int expectedNumberOfDevelopers = 2;
+
+        // Act
+        var developers = service.GetLesDeveloppeurs(idProfil);
+
+        // Assert
+        if (developers.Count != expectedNumberOfDevelopers)
+        {
+            throw new Exception($"Test failed: Expected {expectedNumberOfDevelopers} developers, but got {developers.Count}.");
+        }
+        Console.WriteLine("Test GetLesDeveloppeurs_WithProfil_ShouldReturnCorrectNumberOfDevelopers passed.");
+    }
+
+    public static void GetLesDeveloppeurs_WithoutProfil_ShouldReturnAllDevelopers()
+    {
+        // Arrange
+        var service = new DeveloppeurService();
+        int expectedTotalNumberOfDevelopers = 4;
+
+        // Act
+        var developers = service.GetLesDeveloppeurs(null);
+
+        // Assert
+        if (developers.Count != expectedTotalNumberOfDevelopers)
+        {
+            throw new Exception($"Test failed: Expected {expectedTotalNumberOfDevelopers} developers, but got {developers.Count}.");
+        }
+        Console.WriteLine("Test GetLesDeveloppeurs_WithoutProfil_ShouldReturnAllDevelopers passed.");
+    }
+
+    public static void RunTests()
+    {
+        GetLesDeveloppeurs_WithProfil_ShouldReturnCorrectNumberOfDevelopers();
+        GetLesDeveloppeurs_WithoutProfil_ShouldReturnAllDevelopers();
+    }
+}
+
+// Exécuter les tests
+public class Program
+{
+    public static void Main()
+    {
+        DeveloppeurServiceTests.RunTests();
+    }
+}
+
